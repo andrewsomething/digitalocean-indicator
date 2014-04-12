@@ -17,7 +17,7 @@ from gettext import gettext as _
 gettext.textdomain('digitalocean-indicator')
 
 class Indicator:
-    def __init__(self, window):
+    def __init__(self):
         self.indicator = AppIndicator3.Indicator.new('digitalocean-indicator',
                          'deluge-panel',
                          AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
@@ -25,26 +25,21 @@ class Indicator:
 
         #Uncomment and choose an icon for attention state. 
         #self.indicator.set_attention_icon("ICON-NAME")
-        
         self.menu = Gtk.Menu()
 
         # Add items to Menu and connect signals.
         self.add_droplets()
 
-        
-        #Adding preferences button 
-        #window represents the main Window object of your app
+        #Adding preferences button
         self.preferences = Gtk.MenuItem("Preferences")
-        self.preferences.connect("activate",window.on_mnu_preferences_activate)
+        self.preferences.connect("activate", self.on_preferences_activate)
         self.preferences.show()
         self.menu.append(self.preferences)
 
         self.quit = Gtk.MenuItem("Quit")
-        self.quit.connect("activate",window.on_mnu_close_activate)
+        self.quit.connect("activate", self.on_exit_activate)
         self.quit.show()
         self.menu.append(self.quit)
-
-        # Add more items here                           
 
         self.menu.show()
         self.indicator.set_menu(self.menu)
@@ -57,26 +52,32 @@ class Indicator:
             for droplet in my_droplets:
                 droplet_item = Gtk.ImageMenuItem.new_with_label(droplet.name)
                 droplet_item.set_always_show_image(True)
-            if droplet.status == "active":
-                img = Gtk.Image.new_from_icon_name("gtk-ok", Gtk.IconSize.MENU)
-                droplet_item.set_image(img)
-            else:
-                img = Gtk.Image.new_from_icon_name("gtk-stop", Gtk.IconSize.MENU)
-                droplet_item.set_image(img)
-            droplet_item.show()
-            self.menu.append(droplet_item)
+                if droplet.status == "active":
+                    img = Gtk.Image.new_from_icon_name("gtk-ok", Gtk.IconSize.MENU)
+                    droplet_item.set_image(img)
+                else:
+                    img = Gtk.Image.new_from_icon_name("gtk-stop", Gtk.IconSize.MENU)
+                    droplet_item.set_image(img)
+                droplet_item.show()
+                self.menu.append(droplet_item)
         except Exception, e:
             print("Error: " + e.message)
             if "Access Denied" in e.message:
                 error_indicator = Gtk.ImageMenuItem.new_with_label(
-                    "Error logging in. Please check your credentials.")
+                    _("Error logging in. Please check your credentials."))
                 img = Gtk.Image.new_from_icon_name("error", Gtk.IconSize.MENU)
                 error_indicator.set_always_show_image(True)
                 error_indicator.set_image(img)
                 error_indicator.show()
                 self.menu.append(error_indicator)
 
-    
-def new_application_indicator(window):
-    ind = Indicator(window)
-    return ind.indicator
+
+    def on_preferences_activate(self, widget):
+        pass
+
+    def on_exit_activate(self, widget):
+        self.on_destroy(widget)
+
+    def on_destroy(self, widget, data=None):
+        # Clean up code for saving application state should be added here.
+        Gtk.main_quit()
