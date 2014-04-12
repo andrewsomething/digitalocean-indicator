@@ -1,0 +1,8 @@
+[Desktop Entry]
+_Name=Digitalocean Indicator
+_Comment=DigitaloceanIndicator application
+Categories=GNOME;Utility;
+Exec=digitalocean-indicator
+Icon=digitalocean-indicator
+Terminal=false
+Type=Application
