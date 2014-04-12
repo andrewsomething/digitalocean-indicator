@@ -48,6 +48,3 @@ class PreferencesDialog(Gtk.Dialog):
     def on_btn_close_clicked(self, widget, data=None):
         self.destroy()
 
-    def on_btn_help_clicked(self, widget, data=None):
-        show_uri(self, "ghelp:%s" % get_help_uri('preferences'))
-

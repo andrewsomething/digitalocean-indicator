@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="digitalocean-indicator">
-  <schema id="net.launchpad.digitalocean-indicator" path="/net/launchpad/digitalocean-indicator/">
-    <key name="example" type="s">
-      <default>'foo'</default>
-      <summary>Sample setting</summary>
-      <description>Longer description of this sample setting.  Talk about allowed values and what it does.</description>
+  <schema id="com.andrewsomething.digitalocean-indicator" path="/com/andrewsomething/digitalocean-indicator/">
+    <key name="do-api-key" type="s">
+      <default>''</default>
+      <summary>DigitalOcean API Key</summary>
+      <description>Defaults to the environmental variable DO_API_KEY</description>
+    </key>
+    <key name="do-client-id" type="s">
+      <default>''</default>
+      <summary>DigitalOcean Client ID</summary>
+      <description>Defaults to the environmental variable DO_CLIENT_ID</description>
     </key>
   </schema>
 </schemalist>

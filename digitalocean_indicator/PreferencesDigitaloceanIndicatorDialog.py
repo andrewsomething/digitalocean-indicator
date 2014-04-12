@@ -26,8 +26,10 @@ class PreferencesDigitaloceanIndicatorDialog(PreferencesDialog):
         super(PreferencesDigitaloceanIndicatorDialog, self).finish_initializing(builder)
 
         # Bind each preference widget to gsettings
-        settings = Gio.Settings("net.launchpad.digitalocean-indicator")
-        widget = self.builder.get_object('example_entry')
-        settings.bind("example", widget, "text", Gio.SettingsBindFlags.DEFAULT)
-
+        settings = Gio.Settings("com.andrewsomething.digitalocean-indicator")
+        do_api_key = self.builder.get_object('do_api_key_entry')
+        settings.bind("do-api-key", do_api_key, "text", Gio.SettingsBindFlags.DEFAULT)
+        do_client_id = self.builder.get_object('do_client_id_entry')
+        settings.bind("do-client-id", do_client_id, "text", Gio.SettingsBindFlags.DEFAULT)
         # Code for other initialization actions should be added here.
+

@@ -126,12 +126,13 @@ class InstallAndUpdateDataDirectory(DistUtilsExtra.auto.install_auto):
 DistUtilsExtra.auto.setup(
     name='digitalocean-indicator',
     version='0.1',
-    #license='GPL-3',
-    #author='Your Name',
-    #author_email='email@ubuntu.com',
+#    license='GPL-3',
+#    author='Andrew Starr-Bochicchio',
+#    author_email='a.starr.b@gmail.com',
     #description='UI for managing …',
     #long_description='Here a longer description',
     #url='https://launchpad.net/digitalocean-indicator',
     cmdclass={'install': InstallAndUpdateDataDirectory}
+    license='GPL-3',
     )
 
