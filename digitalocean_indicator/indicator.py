@@ -28,6 +28,7 @@ class Indicator:
         self.settings = Gio.Settings("com.andrewsomething.digitalocean-indicator")
         self.settings.connect('changed', self.on_preferences_changed)
         self.preferences_dialog = None
+        self.preferences_changed  = False
 
         # If the key/id aren't set, take them from the environment.
         self.do_api_key = self.settings.get_string("do-api-key")
