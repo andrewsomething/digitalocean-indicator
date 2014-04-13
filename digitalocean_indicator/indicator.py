@@ -20,8 +20,8 @@ from gi.repository import AppIndicator3 # pylint: disable=E0611
 import digitalocean
 import os
 
-from digitalocean_indicator.AboutDigitaloceanIndicatorDialog import AboutDigitaloceanIndicatorDialog
 from digitalocean_indicator.PreferencesDigitaloceanIndicatorDialog import PreferencesDigitaloceanIndicatorDialog
+from digitalocean_indicator_lib.helpers import get_media_file
 
 import gettext
 from gettext import gettext as _
@@ -30,9 +30,13 @@ gettext.textdomain('digitalocean-indicator')
 class Indicator:
     def __init__(self):
         self.indicator = AppIndicator3.Indicator.new('digitalocean-indicator',
-                         'deluge-panel',
+                         '',
                          AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
+        icon_uri = get_media_file("digitalocean-indicator.svg")
+        icon_path = icon_uri.replace("file:///", '')
+        self.indicator.set_icon(icon_path)
+
 
         self.PreferencesDialog = PreferencesDigitaloceanIndicatorDialog
         self.settings = Gio.Settings("com.andrewsomething.digitalocean-indicator")
