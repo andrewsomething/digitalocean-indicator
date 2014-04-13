@@ -19,7 +19,7 @@ from gi.repository import Gtk, GLib, Gio, Gdk # pylint: disable=E0611
 from gi.repository import AppIndicator3 # pylint: disable=E0611
 from gi.repository import Notify
 import digitalocean
-import os
+import os, time
 
 from digitalocean_indicator.PreferencesDigitaloceanIndicatorDialog import PreferencesDigitaloceanIndicatorDialog
 from digitalocean_indicator_lib.helpers import get_media_file
@@ -104,10 +104,12 @@ class Indicator:
                 droplet_item = Gtk.ImageMenuItem.new_with_label(droplet.name)
                 droplet_item.set_always_show_image(True)
                 if droplet.status == "active":
-                    img = Gtk.Image.new_from_icon_name("gtk-ok", Gtk.IconSize.MENU)
+                    img = Gtk.Image.new_from_icon_name("gtk-ok",
+                                                       Gtk.IconSize.MENU)
                     droplet_item.set_image(img)
                 else:
-                    img = Gtk.Image.new_from_icon_name("gtk-stop", Gtk.IconSize.MENU)
+                    img = Gtk.Image.new_from_icon_name("gtk-stop",
+                                                       Gtk.IconSize.MENU)
                     droplet_item.set_image(img)
                 droplet_item.show()
                 sub_menu = Gtk.Menu.new()
@@ -156,6 +158,44 @@ class Indicator:
                 web.show()
                 sub_menu.append(web)
 
+                if droplet.status == "active":
+                    power_off = Gtk.ImageMenuItem.new_with_label("Power off...")
+                    power_off.set_always_show_image(True)
+                    img = Gtk.Image.new_from_icon_name("system-shutdown",
+                                                       Gtk.IconSize.MENU)
+                    power_off.set_image(img)
+                    power_off.connect('activate',
+                                      self.on_power_toggled,
+                                      droplet,
+                                      'off')
+                    power_off.show()
+                    sub_menu.append(power_off)
+
+                    reboot = Gtk.ImageMenuItem.new_with_label("Reboot...")
+                    reboot.set_always_show_image(True)
+                    img = Gtk.Image.new_from_icon_name("system-reboot",
+                                                       Gtk.IconSize.MENU)
+                    reboot.set_image(img)
+                    reboot.connect('activate',
+                                   self.on_power_toggled,
+                                   droplet,
+                                   'reboot')
+                    reboot.show()
+                    sub_menu.append(reboot)
+
+                else:
+                    power_on = Gtk.ImageMenuItem.new_with_label("Power on...")
+                    power_on.set_always_show_image(True)
+                    img = Gtk.Image.new_from_icon_name("gtk-ok",
+                                                       Gtk.IconSize.MENU)
+                    power_on.set_image(img)
+                    power_on.connect('activate',
+                                     self.on_power_toggled,
+                                     droplet,
+                                     'on')
+                    power_on.show()
+                    sub_menu.append(power_on)
+
                 sub_menu.show()
                 droplet_item.set_submenu(sub_menu)
                 self.menu.append(droplet_item)
@@ -196,6 +236,28 @@ class Indicator:
     def open_web_link(self, widget, url):
         Gtk.show_uri(None, url, Gdk.CURRENT_TIME)
 
+    def on_power_toggled(self, widget, droplet, action):
+        if action is "on":
+            droplet.power_on()
+        elif action is "reboot":
+            droplet.reboot()
+        else:
+            droplet.power_off()
+        events = droplet.get_events()
+        loading = True
+        while loading:
+            for event in events:
+                event.load()
+                try:
+                    if int(event.percentage) < 100:
+                        time.sleep(2)
+                    else:
+                        loading = False
+                        break
+                except TypeError: # Not yet reporting any percentage
+                    pass
+        self.rebuild_menu()
+
     def on_preferences_changed(self, settings, key, data=None):
         if key == "refresh-interval":
             self.change_timeout = True
@@ -208,7 +270,8 @@ class Indicator:
         """Display the preferences window for digitalocean-indicator."""
         if self.preferences_dialog is None:
             self.preferences_dialog = self.PreferencesDialog() # pylint: disable=E1102
-            self.preferences_dialog.connect('destroy', self.on_preferences_dialog_destroyed)
+            self.preferences_dialog.connect('destroy',
+                                            self.on_preferences_dialog_destroyed)
             self.preferences_dialog.show()
         if self.preferences_dialog is not None:
             self.preferences_dialog.present()
