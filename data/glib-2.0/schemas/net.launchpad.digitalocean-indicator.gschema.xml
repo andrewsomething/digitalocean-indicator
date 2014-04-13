@@ -11,5 +11,10 @@
       <summary>DigitalOcean Client ID</summary>
       <description>Defaults to the environmental variable DO_CLIENT_ID</description>
     </key>
+        <key name="refresh-interval" type="i">
+      <default>10</default>
+      <summary>Refresh interval</summary>
+      <description>Refresh interval in minutes</description>
+    </key>
   </schema>
 </schemalist>

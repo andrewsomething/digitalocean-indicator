@@ -41,5 +41,7 @@ class PreferencesDigitaloceanIndicatorDialog(PreferencesDialog):
         settings.bind("do-api-key", do_api_key, "text", Gio.SettingsBindFlags.DEFAULT)
         do_client_id = self.builder.get_object('do_client_id_entry')
         settings.bind("do-client-id", do_client_id, "text", Gio.SettingsBindFlags.DEFAULT)
+        refresh_interval = self.builder.get_object('refresh_interval_spin')
+        settings.bind("refresh-interval", refresh_interval, "value", Gio.SettingsBindFlags.DEFAULT)
         # Code for other initialization actions should be added here.
 

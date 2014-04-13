@@ -63,8 +63,10 @@ class Indicator:
 
         # Add items to Menu and connect signals.
         self.build_menu()
-        # Refresh menu every 10 min
-        GLib.timeout_add_seconds(60 * 10, self.rebuild_menu)
+        # Refresh menu every 10 min by default
+        self.change_timeout = False
+        self.interval = self.settings.get_int("refresh-interval")
+        GLib.timeout_add_seconds(self.interval*60, self.timeout_set)
 
     def build_menu(self):
         self.add_droplets()
@@ -118,8 +120,21 @@ class Indicator:
             error_indicator.show()
             self.menu.append(error_indicator)
 
+    def timeout_set(self):
+        self.rebuild_menu()
+        if self.change_timeout:
+            GLib.timeout_add_seconds(self.interval*60, self.timeout_set)
+            return False
+        return True
+    
     def on_preferences_changed(self, settings, key, data=None):
-        self.preferences_changed = True
+        print("!")
+        if key == "refresh-interval":
+            self.change_timeout = True
+            self.interval = settings.get_int(key)
+            GLib.timeout_add_seconds(self.interval*60, self.timeout_set)
+        else:
+            self.preferences_changed = True
 
     def on_preferences_activate(self, widget):
         """Display the preferences window for digitalocean-indicator."""
