@@ -19,6 +19,5 @@
 
 while keeping its api constant'''
 from . helpers import set_up_logging
-from . Window import Window
 from . digitalocean_indicatorconfig import get_version
 
