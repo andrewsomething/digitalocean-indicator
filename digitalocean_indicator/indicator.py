@@ -15,8 +15,9 @@
 
 """Code to add AppIndicator."""
 
-from gi.repository import Gtk, GLib, Gio # pylint: disable=E0611
+from gi.repository import Gtk, GLib, Gio, Gdk # pylint: disable=E0611
 from gi.repository import AppIndicator3 # pylint: disable=E0611
+from gi.repository import Notify
 import digitalocean
 import os
 
@@ -37,6 +38,7 @@ class Indicator:
         icon_path = icon_uri.replace("file:///", '')
         self.indicator.set_icon(icon_path)
 
+        Notify.init('DigitalOcean Indicator')
 
         self.PreferencesDialog = PreferencesDigitaloceanIndicatorDialog
         self.settings = Gio.Settings("com.andrewsomething.digitalocean-indicator")
@@ -104,6 +106,50 @@ class Indicator:
                     img = Gtk.Image.new_from_icon_name("gtk-stop", Gtk.IconSize.MENU)
                     droplet_item.set_image(img)
                 droplet_item.show()
+                sub_menu = Gtk.Menu.new()
+
+                ip = Gtk.MenuItem.new()
+                ip.set_label("IP: " + str(droplet.ip_address))
+                ip.connect('activate', self.on_ip_clicked)
+                ip.show()
+                sub_menu.append(ip)
+
+                images = manager.get_all_images()
+                for i in images:
+                    if i.id == droplet.image_id:
+                        image = i.name
+                image_id = Gtk.MenuItem.new()
+                image_id.set_label("Type: " + image)
+                image_id.show()
+                sub_menu.append(image_id)
+
+                regions = manager.get_all_regions()
+                for r in regions:
+                    if r.id == droplet.region_id:
+                        region = r.name
+                region_id = Gtk.MenuItem.new()
+                region_id.set_label("Region: " + region)
+                region_id.show()
+                sub_menu.append(region_id)
+
+                sizes = manager.get_all_sizes()
+                for s in sizes:
+                    if s.id == droplet.size_id:
+                        size = s.name
+                size_id = Gtk.MenuItem.new()
+                size_id.set_label("Size: " + size)
+                size_id.show()
+                sub_menu.append(size_id)
+
+                web = Gtk.MenuItem.new()
+                web.set_label("View on web...")
+                droplet_url = "https://cloud.digitalocean.com/droplets/%s" % droplet.id
+                web.connect('activate', self.open_web_link, droplet_url)
+                web.show()
+                sub_menu.append(web)
+
+                sub_menu.show()
+                droplet_item.set_submenu(sub_menu)
                 self.menu.append(droplet_item)
         except Exception, e:
             if e.message:
@@ -126,9 +172,23 @@ class Indicator:
             GLib.timeout_add_seconds(self.interval*60, self.timeout_set)
             return False
         return True
-    
+
+    def on_ip_clicked(self, widget):
+        address = widget.get_label().replace("IP: ", '')
+        clipboard = Gtk.Clipboard.get(Gdk.SELECTION_CLIPBOARD)
+        clipboard.set_text(address, -1)
+        message = 'IP address %s copied to clipboard' % address
+        notification = Notify.Notification.new(
+            'DigitalOcean Indicator',
+            message,
+            'digitalocean-indicator'
+        )
+        notification.show()
+
+    def open_web_link(self, widget, url):
+        Gtk.show_uri(None, url, Gdk.CURRENT_TIME)
+
     def on_preferences_changed(self, settings, key, data=None):
-        print("!")
         if key == "refresh-interval":
             self.change_timeout = True
             self.interval = settings.get_int(key)
@@ -152,7 +212,6 @@ class Indicator:
         for i in self.menu.get_children():
             self.menu.remove(i)
         self.build_menu()
-        print("Rebuilding....")
         return True
 
     def on_preferences_dialog_destroyed(self, widget, data=None):
