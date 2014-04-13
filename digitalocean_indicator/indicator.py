@@ -59,6 +59,8 @@ class Indicator:
 
         # Add items to Menu and connect signals.
         self.build_menu()
+        # Refresh menu every 10 min
+        GLib.timeout_add_seconds(60 * 10, self.rebuild_menu)
 
     def build_menu(self):
         self.add_droplets()
@@ -67,6 +69,11 @@ class Indicator:
         self.preferences.connect("activate", self.on_preferences_activate)
         self.preferences.show()
         self.menu.append(self.preferences)
+
+        self.quit = Gtk.MenuItem("Refresh")
+        self.quit.connect("activate", self.on_refresh_activate)
+        self.quit.show()
+        self.menu.append(self.quit)
 
         self.quit = Gtk.MenuItem("Quit")
         self.quit.connect("activate", self.on_exit_activate)
@@ -93,15 +100,19 @@ class Indicator:
                 droplet_item.show()
                 self.menu.append(droplet_item)
         except Exception, e:
-            print("Error: " + e.message)
+            if e.message:
+                print("Error: ", e.message)
             if "Access Denied" in e.message:
                 error_indicator = Gtk.ImageMenuItem.new_with_label(
                     _("Error logging in. Please check your credentials."))
-                img = Gtk.Image.new_from_icon_name("error", Gtk.IconSize.MENU)
-                error_indicator.set_always_show_image(True)
-                error_indicator.set_image(img)
-                error_indicator.show()
-                self.menu.append(error_indicator)
+            else:
+                error_indicator = Gtk.ImageMenuItem.new_with_label(
+                    _("No network connection."))
+            img = Gtk.Image.new_from_icon_name("error", Gtk.IconSize.MENU)
+            error_indicator.set_always_show_image(True)
+            error_indicator.set_image(img)
+            error_indicator.show()
+            self.menu.append(error_indicator)
 
     def on_preferences_changed(self, settings, key, data=None):
         self.preferences_changed = True
@@ -115,20 +126,24 @@ class Indicator:
         if self.preferences_dialog is not None:
             self.preferences_dialog.present()
 
+    def on_refresh_activate(self, widget):
+        self.rebuild_menu()
+
     def rebuild_menu(self):
-        #Get the settings again before rebuilding the menu
-        self.do_api_key = self.settings.get_string("do-api-key")
-        self.do_client_id = self.settings.get_string("do-client-id")
+        for i in self.menu.get_children():
+            self.menu.remove(i)
         self.build_menu()
+        print("Rebuilding....")
+        return True
 
     def on_preferences_dialog_destroyed(self, widget, data=None):
         self.preferences_dialog = None
         if self.preferences_changed is True:
-            for i in self.menu.get_children():
-                self.menu.remove(i)
+            self.do_api_key = self.settings.get_string("do-api-key")
+            self.do_client_id = self.settings.get_string("do-client-id")
             self.rebuild_menu()
         self.preferences_changed  = False
-        
+
     def on_exit_activate(self, widget):
         self.on_destroy(widget)
 
