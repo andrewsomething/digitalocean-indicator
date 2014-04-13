@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Exec=digitalocean-indicator
+Icon=digitalocean-indicator
+Name=Digitalocean Indicator
+Comment=Monitor your droplets
+X-GNOME-Autostart-enabled=true

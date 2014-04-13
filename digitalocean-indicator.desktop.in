@@ -1,6 +1,6 @@
 [Desktop Entry]
 _Name=Digitalocean Indicator
-_Comment=DigitaloceanIndicator application
+_Comment=Monitor your droplets
 Categories=GNOME;Utility;
 Exec=digitalocean-indicator
 Icon=digitalocean-indicator
