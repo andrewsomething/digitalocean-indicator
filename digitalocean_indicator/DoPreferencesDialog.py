@@ -35,12 +35,12 @@ autostart_file = get_media_file(autostart_template)
 autostart_file = autostart_file.replace("file:///", '')
 installed_file = os.path.join(autostart_dir, autostart_template)
 
-class PreferencesDigitaloceanIndicatorDialog(PreferencesDialog):
+class DoPreferencesDialog(PreferencesDialog):
     __gtype_name__ = "PreferencesDigitaloceanIndicatorDialog"
 
     def finish_initializing(self, builder): # pylint: disable=E1002
         """Set up the preferences dialog"""
-        super(PreferencesDigitaloceanIndicatorDialog, self).finish_initializing(builder)
+        super(DoPreferencesDialog, self).finish_initializing(builder)
 
         # Bind each preference widget to gsettings
         settings = Gio.Settings("com.andrewsomething.digitalocean-indicator")

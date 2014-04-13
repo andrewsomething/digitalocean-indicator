@@ -21,7 +21,7 @@ from gi.repository import Notify
 import digitalocean
 import os, time
 
-from digitalocean_indicator.PreferencesDigitaloceanIndicatorDialog import PreferencesDigitaloceanIndicatorDialog
+from digitalocean_indicator.DoPreferencesDialog import DoPreferencesDialog
 from digitalocean_indicator_lib.helpers import get_media_file
 
 import gettext
@@ -40,7 +40,7 @@ class Indicator:
 
         Notify.init('DigitalOcean Indicator')
 
-        self.PreferencesDialog = PreferencesDigitaloceanIndicatorDialog
+        self.PreferencesDialog = DoPreferencesDialog
         self.settings = Gio.Settings("com.andrewsomething.digitalocean-indicator")
         self.settings.connect('changed', self.on_preferences_changed)
         self.preferences_dialog = None
