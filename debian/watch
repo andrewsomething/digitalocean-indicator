@@ -1,0 +1,3 @@
+version=3
+opts=filenamemangle=s/.+\/v?(\d\S*)\.tar\.gz/digitalocean-indicator-$1\.tar\.gz/ \
+  https://github.com/andrewsomething/digitalocean-indicator/tags .*/v?(\d\S*)\.tar\.gz

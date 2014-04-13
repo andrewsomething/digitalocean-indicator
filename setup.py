@@ -139,10 +139,16 @@ DistUtilsExtra.auto.setup(
     license='GPL-3',
     author='Andrew Starr-Bochicchio',
     author_email='a.starr.b@gmail.com',
-    #description='UI for managing …',
-    #long_description='Here a longer description',
-    url='https://launchpad.net/digitalocean-indicator',
+    description='manage and monitor your droplets',
+    long_description="""
+The DigitalOcean indicator allows you to monitor and manage your
+droplets directly from your panel. You can:
+
+- Quickly see which droplets are active.
+- Reboot, power on, and/or power down you droplets.
+- Copy your droplet's IP address with a click for easy access.
+  """,
+    url='https://github.com/andrewsomething/digitalocean-indicator',
     cmdclass={'install': InstallAndUpdateDataDirectory}
-    license='GPL-3',
     )
 
