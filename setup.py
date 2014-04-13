@@ -86,9 +86,7 @@ def update_desktop_file(filename, target_pkgdata, target_scripts):
         fout = file(filename + '.new', 'w')
 
         for line in fin:
-            if 'Icon=' in line:
-                line = "Icon=%s\n" % (target_pkgdata + 'media/digitalocean-indicator.svg')
-            elif 'Exec=' in line:
+            if 'Exec=' in line:
                 cmd = line.split("=")[1].split(None, 1)
                 line = "Exec=%s" % (target_scripts + 'digitalocean-indicator')
                 if len(cmd) > 1:
