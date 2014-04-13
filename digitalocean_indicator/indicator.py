@@ -72,7 +72,11 @@ class Indicator:
 
     def build_menu(self):
         self.add_droplets()
-        #Adding preferences button
+
+        self.seperator = Gtk.SeparatorMenuItem.new()
+        self.seperator.show()
+        self.menu.append(self.seperator)
+
         self.preferences = Gtk.MenuItem("Preferences")
         self.preferences.connect("activate", self.on_preferences_activate)
         self.preferences.show()
@@ -140,6 +144,10 @@ class Indicator:
                 size_id.set_label("Size: " + size)
                 size_id.show()
                 sub_menu.append(size_id)
+
+                seperator = Gtk.SeparatorMenuItem.new()
+                seperator.show()
+                sub_menu.append(seperator)
 
                 web = Gtk.MenuItem.new()
                 web.set_label("View on web...")
