@@ -11,7 +11,7 @@ The DigitalOcean indicator allows you to monitor and manage your droplets direct
 
 You can install it on Ubuntu from a PPA:
 
-    sudo apt-get-repository ppa:andrewsomething/digitalocean
+    sudo add-apt-repository ppa:andrewsomething/digitalocean
     sudo apt-get update
     sudo apt-get install digitalocean-indicator
 
