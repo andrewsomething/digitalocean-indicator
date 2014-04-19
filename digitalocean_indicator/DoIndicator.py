@@ -128,28 +128,31 @@ class Indicator:
                 for i in images:
                     if i.id == droplet.image_id:
                         image = i.name
-                image_id = Gtk.MenuItem.new()
-                image_id.set_label(_("Type: ") + image)
-                image_id.show()
-                sub_menu.append(image_id)
+                        image_id = Gtk.MenuItem.new()
+                        image_id.set_label(_("Type: ") + image)
+                        image_id.show()
+                        sub_menu.append(image_id)
+                        break
 
                 regions = manager.get_all_regions()
                 for r in regions:
                     if r.id == droplet.region_id:
                         region = r.name
-                region_id = Gtk.MenuItem.new()
-                region_id.set_label(_("Region: ") + region)
-                region_id.show()
-                sub_menu.append(region_id)
+                        region_id = Gtk.MenuItem.new()
+                        region_id.set_label(_("Region: ") + region)
+                        region_id.show()
+                        sub_menu.append(region_id)
+                        break
 
                 sizes = manager.get_all_sizes()
                 for s in sizes:
                     if s.id == droplet.size_id:
                         size = s.name
-                size_id = Gtk.MenuItem.new()
-                size_id.set_label(_("Size: ") + size)
-                size_id.show()
-                sub_menu.append(size_id)
+                        size_id = Gtk.MenuItem.new()
+                        size_id.set_label(_("Size: ") + size)
+                        size_id.show()
+                        sub_menu.append(size_id)
+                        break
 
                 seperator = Gtk.SeparatorMenuItem.new()
                 seperator.show()
