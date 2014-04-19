@@ -160,9 +160,7 @@ class Indicator:
 
                 web = Gtk.MenuItem.new()
                 web.set_label(_("View on web..."))
-                droplet_url = """
-                              https://cloud.digitalocean.com/droplets/%s
-                              """ % droplet.id
+                droplet_url = "https://cloud.digitalocean.com/droplets/%s" % droplet.id
                 web.connect('activate', self.open_web_link, droplet_url)
                 web.show()
                 sub_menu.append(web)
