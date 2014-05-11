@@ -114,6 +114,9 @@ class InstallAndUpdateDataDirectory(DistUtilsExtra.auto.install_auto):
     def run(self):
         DistUtilsExtra.auto.install_auto.run(self)
 
+        if not self.root:
+            self.root = '/'
+
         target_data = '/' + os.path.relpath(self.install_data, self.root) + '/'
         target_pkgdata = target_data + 'share/digitalocean-indicator/'
         target_scripts = '/' + os.path.relpath(self.install_scripts, self.root) + '/'
