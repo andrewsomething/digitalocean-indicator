@@ -11,6 +11,11 @@
       <summary>DigitalOcean Client ID</summary>
       <description>Defaults to the environmental variable DO_CLIENT_ID</description>
     </key>
+        <key name="do-api-token" type="s">
+      <default>''</default>
+      <summary>DigitalOcean API Token</summary>
+      <description></description>
+    </key>
         <key name="refresh-interval" type="i">
       <default>10</default>
       <summary>Refresh interval</summary>
