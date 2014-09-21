@@ -183,9 +183,9 @@ class Indicator:
         except Exception, e:
             if e.message:
                 print("Error: ", e.message)
-            if "Unable to authenticate you." in e.message:
+            if "Unable to authenticate you." or "No token provied." in e.message:
                 error_indicator = Gtk.ImageMenuItem.new_with_label(
-                    _("Please connect to you DigitalOcean acount."))
+                    _("Please connect to your DigitalOcean account."))
             else:
                 error_indicator = Gtk.ImageMenuItem.new_with_label(
                     _("No network connection."))
