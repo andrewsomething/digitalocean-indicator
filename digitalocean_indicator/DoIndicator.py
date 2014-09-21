@@ -48,22 +48,7 @@ class Indicator:
         self.preferences_dialog = None
         self.preferences_changed = False
 
-        # If the key/id aren't set, take them from the environment.
-        self.do_api_key = self.settings.get_string("do-api-key")
-        if not self.do_api_key:
-            try:
-                self.settings.set_string("do-api-key",
-                                         os.environ["DO_API_KEY"])
-            except KeyError:
-                pass
-
-        self.do_client_id = self.settings.get_string("do-client-id")
-        if not self.do_client_id:
-            try:
-                self.settings.set_string("do-client-id",
-                                         os.environ["DO_CLIENT_ID"])
-            except KeyError:
-                pass
+        self.do_api_token = self.settings.get_string("do-api-token")
 
         self.menu = Gtk.Menu()
 
@@ -101,8 +86,7 @@ class Indicator:
 
     def add_droplets(self):
         try:
-            manager = digitalocean.Manager(client_id=self.do_client_id,
-                                           api_key=self.do_api_key)
+            manager = digitalocean.Manager(token=self.do_api_token)
             my_droplets = manager.get_all_droplets()
             for droplet in my_droplets:
                 droplet_item = Gtk.ImageMenuItem.new_with_label(droplet.name)
@@ -124,35 +108,23 @@ class Indicator:
                 ip.show()
                 sub_menu.append(ip)
 
-                images = manager.get_all_images()
-                for i in images:
-                    if i.id == droplet.image_id:
-                        image = i.name
-                        image_id = Gtk.MenuItem.new()
-                        image_id.set_label(_("Type: ") + image)
-                        image_id.show()
-                        sub_menu.append(image_id)
-                        break
+                image = droplet.image['name']
+                image_id = Gtk.MenuItem.new()
+                image_id.set_label(_("Type: ") + image)
+                image_id.show()
+                sub_menu.append(image_id)
 
-                regions = manager.get_all_regions()
-                for r in regions:
-                    if r.id == droplet.region_id:
-                        region = r.name
-                        region_id = Gtk.MenuItem.new()
-                        region_id.set_label(_("Region: ") + region)
-                        region_id.show()
-                        sub_menu.append(region_id)
-                        break
+                region = droplet.region['name']
+                region_id = Gtk.MenuItem.new()
+                region_id.set_label(_("Region: ") + region)
+                region_id.show()
+                sub_menu.append(region_id)
 
-                sizes = manager.get_all_sizes()
-                for s in sizes:
-                    if s.id == droplet.size_id:
-                        size = s.name
-                        size_id = Gtk.MenuItem.new()
-                        size_id.set_label(_("Size: ") + size)
-                        size_id.show()
-                        sub_menu.append(size_id)
-                        break
+                size = droplet.size['slug']
+                size_id = Gtk.MenuItem.new()
+                size_id.set_label(_("Size: ") + size)
+                size_id.show()
+                sub_menu.append(size_id)
 
                 seperator = Gtk.SeparatorMenuItem.new()
                 seperator.show()
@@ -211,15 +183,16 @@ class Indicator:
         except Exception, e:
             if e.message:
                 print("Error: ", e.message)
-            if "Access Denied" in e.message:
+            if "Unable to authenticate you." in e.message:
                 error_indicator = Gtk.ImageMenuItem.new_with_label(
-                    _("Error logging in. Please check your credentials."))
+                    _("Please connect to you DigitalOcean acount."))
             else:
                 error_indicator = Gtk.ImageMenuItem.new_with_label(
                     _("No network connection."))
             img = Gtk.Image.new_from_icon_name("error", Gtk.IconSize.MENU)
             error_indicator.set_always_show_image(True)
             error_indicator.set_image(img)
+            error_indicator.connect('activate', self.on_preferences_activate)
             error_indicator.show()
             self.menu.append(error_indicator)
 
@@ -247,24 +220,21 @@ class Indicator:
 
     def on_power_toggled(self, widget, droplet, action):
         if action is "on":
-            droplet.power_on()
+            res = droplet.power_on()
         elif action is "reboot":
-            droplet.reboot()
+            res = droplet.reboot()
         else:
-            droplet.power_off()
-        events = droplet.get_events()
+            res = droplet.power_off()
+        action = digitalocean.Action(token=self.do_api_token)
+        action.id = res['action']['id']
         loading = True
         while loading:
-            for event in events:
-                event.load()
-                try:
-                    if int(event.percentage) < 100:
-                        time.sleep(2)
-                    else:
-                        loading = False
-                        break
-                except TypeError:  # Not yet reporting any percentage
-                    pass
+            action.load()
+            if action.status == 'in-progress':
+                time.sleep(2)
+            else:
+                loading = False
+                break
         self.rebuild_menu()
 
     def on_preferences_changed(self, settings, key, data=None):
@@ -297,8 +267,7 @@ class Indicator:
     def on_preferences_dialog_destroyed(self, widget, data=None):
         self.preferences_dialog = None
         if self.preferences_changed is True:
-            self.do_api_key = self.settings.get_string("do-api-key")
-            self.do_client_id = self.settings.get_string("do-client-id")
+            self.do_api_token = self.settings.get_string("do-api-token")
             self.rebuild_menu()
         self.preferences_changed = False
 
