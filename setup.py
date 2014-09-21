@@ -71,11 +71,16 @@ def move_desktop_file(root, target_data, prefix):
         desktop_file = desktop_path + '/extras-digitalocean-indicator.desktop'
         try:
             os.makedirs(desktop_path)
+        except OSError as e:
+            print ("NON-FATAL ERROR: Can't create ", desktop_path, ":", e)
+        try:
             os.rename(old_desktop_file, desktop_file)
+        except OSError as e:
+            print ("ERROR: Can't rename", old_desktop_path, ":", e)
+        try:
             os.rmdir(old_desktop_path)
         except OSError as e:
-            print ("ERROR: Can't rename", old_desktop_file, ":", e)
-            sys.exit(1)
+            print ("NON-FATAL ERROR: Can't delete ", old_desktop_path, ":", e)
 
     return desktop_file
 
