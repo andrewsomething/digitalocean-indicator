@@ -1,3 +1,9 @@
+digitalocean-indicator (0.2.1-0~andrewsomething1) trusty; urgency=medium
+
+  * New upstream release.
+
+ -- Andrew Starr-Bochicchio <asb@digitalocean.com>  Tue, 28 Oct 2014 17:53:32 -0400
+
 digitalocean-indicator (0.2-0~andrewsomething1) trusty; urgency=medium
 
   * New upstream release.
