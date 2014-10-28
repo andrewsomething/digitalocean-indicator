@@ -120,7 +120,7 @@ class Indicator:
                 region_id.show()
                 sub_menu.append(region_id)
 
-                size = droplet.size['slug']
+                size = droplet.size_slug
                 size_id = Gtk.MenuItem.new()
                 size_id.set_label(_("Size: ") + size)
                 size_id.show()
