@@ -17,6 +17,13 @@ import os
 import time
 import digitalocean
 
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('GLib', '2.0')
+gi.require_version('Gio', '2.0')
+gi.require_version('Gdk', '3.0')
+gi.require_version('AppIndicator3', '0.1')
+gi.require_version('Notify', '0.7')
 from gi.repository import Gtk, GLib, Gio, Gdk  # pylint: disable=E0611
 from gi.repository import AppIndicator3  # pylint: disable=E0611
 from gi.repository import Notify

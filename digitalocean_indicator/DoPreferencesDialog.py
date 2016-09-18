@@ -19,6 +19,10 @@
 # data/glib-2.0/schemas/net.launchpad.digitalocean-indicator.gschema.xml
 # See http://developer.gnome.org/gio/stable/GSettings.html for more info.
 
+
+import gi
+gi.require_version('GLib', '2.0')
+gi.require_version('Gio', '2.0')
 from gi.repository import GLib, Gio  # pylint: disable=E0611
 
 from locale import gettext as _

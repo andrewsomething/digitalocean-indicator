@@ -1,5 +1,10 @@
+import gi
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gio', '2.0')
+gi.require_version('WebKit', '3.0')
 from gi.repository import Gtk, Gio
 from gi.repository import WebKit
+
 import urlparse
 
 BASE_URL = 'https://cloud.digitalocean.com/v1/oauth/'

@@ -26,7 +26,7 @@ class TestDoIndicator(unittest.TestCase):
         self.DoIndicator_members = [
         'AppIndicator3', 'DoPreferencesDialog', 'GLib', 'Gdk', 'Gio', 'Gtk',
         'Indicator', 'Notify', 'digitalocean', 'get_media_file', 'gettext',
-        'os', 'time']
+        'gi', 'os', 'time']
 
     def test_DoIndicator_members(self):
         all_members = dir(DoIndicator)

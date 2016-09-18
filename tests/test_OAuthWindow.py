@@ -25,7 +25,7 @@ class TestOAuthWindow(unittest.TestCase):
     def setUp(self):
         self.OAuthWindow_members = [
         'AuthWin', 'BASE_URL', 'CALLBACK_URL', 'CLIENT_ID', 'Gio', 'Gtk',
-        'WebKit', 'urlparse']
+        'WebKit', 'gi', 'urlparse']
 
     def test_OAuthWindow_members(self):
         all_members = dir(OAuthWindow)

@@ -26,7 +26,7 @@ class TestDoPreferencesDialog(unittest.TestCase):
         self.DoPreferencesDialog_members = [
         'AuthWin', 'DoPreferencesDialog', 'GLib', 'Gio', 'PreferencesDialog',
         'autostart_dir', 'autostart_file', 'autostart_template',
-        'get_media_file', 'installed_file', 'logger', 'logging', 'os',
+        'get_media_file', 'gi', 'installed_file', 'logger', 'logging', 'os',
         'requests']
 
     def test_DoPreferencesDialog_members(self):
