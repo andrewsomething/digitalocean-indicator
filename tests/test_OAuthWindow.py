@@ -14,17 +14,24 @@
 # with this program.  If not, see <http://www.gnu.org/licenses/>.
 ### END LICENSE
 
+import sys
+import os.path
 import unittest
-import subprocess
+sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), "..")))
 
-class TestPylint(unittest.TestCase):
-    def test_project_errors_only(self):
-        '''run pylint in error only mode
-        
-        your code may well work even with pylint errors
-        but have some unusual code'''
-        return_code = subprocess.call(["pylint", '-E', 'digitalocean_indicator'])
+from digitalocean_indicator import OAuthWindow
 
-if __name__ == '__main__':
-    'you will get better results with nosetests'
+class TestOAuthWindow(unittest.TestCase):
+    def setUp(self):
+        self.OAuthWindow_members = [
+        'AuthWin', 'BASE_URL', 'CALLBACK_URL', 'CLIENT_ID', 'Gio', 'Gtk',
+        'WebKit', 'urlparse']
+
+    def test_OAuthWindow_members(self):
+        all_members = dir(OAuthWindow)
+        public_members = [x for x in all_members if not x.startswith('_')]
+        public_members.sort()
+        self.assertEqual(self.OAuthWindow_members, public_members)
+
+if __name__ == '__main__':    
     unittest.main()

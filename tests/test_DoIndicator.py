@@ -19,18 +19,20 @@ import os.path
 import unittest
 sys.path.insert(0, os.path.realpath(os.path.join(os.path.dirname(__file__), "..")))
 
-from digitalocean_indicator import AboutDigitaloceanIndicatorDialog
+from digitalocean_indicator import DoIndicator
 
-class TestExample(unittest.TestCase):
+class TestDoIndicator(unittest.TestCase):
     def setUp(self):
-        self.AboutDigitaloceanIndicatorDialog_members = [
-        'AboutDialog', 'AboutDigitaloceanIndicatorDialog', 'gettext', 'logger', 'logging']
+        self.DoIndicator_members = [
+        'AppIndicator3', 'DoPreferencesDialog', 'GLib', 'Gdk', 'Gio', 'Gtk',
+        'Indicator', 'Notify', 'digitalocean', 'get_media_file', 'gettext',
+        'os', 'time']
 
-    def test_AboutDigitaloceanIndicatorDialog_members(self):
-        all_members = dir(AboutDigitaloceanIndicatorDialog)
+    def test_DoIndicator_members(self):
+        all_members = dir(DoIndicator)
         public_members = [x for x in all_members if not x.startswith('_')]
         public_members.sort()
-        self.assertEqual(self.AboutDigitaloceanIndicatorDialog_members, public_members)
+        self.assertEqual(self.DoIndicator_members, public_members)
 
 if __name__ == '__main__':    
     unittest.main()
