@@ -8,7 +8,7 @@ from gi.repository import WebKit
 import urlparse
 
 BASE_URL = 'https://cloud.digitalocean.com/v1/oauth/'
-CLIENT_ID = 'de161c2041b50695f89a4f5bebfa638d0783eebf0d38309aa2ee892be4a30bf2'
+CLIENT_ID = '336165c2605e00bc42b4bff8bd08737600d782fe62f117206fdb917ddb4b1e43'
 CALLBACK_URL = 'http://andrewsomething.com'
 
 
@@ -27,12 +27,12 @@ class AuthWin(Gtk.Dialog):
         self.scrolled.add(self.web)
         box.pack_start(self.scrolled, True, True, 0)
 
-        self.set_size_request(400, 575)
+        self.set_size_request(850, 650)
         self.set_position(Gtk.WindowPosition.CENTER)
         self.set_title("Authorize")
         self.set_skip_taskbar_hint(True)
         self.set_resizable(False)
-        self.set_default_size(400, 575)
+        self.set_default_size(850, 650)
         self.web.load_uri(oauth_url)
         self.show_all()
         self.web.connect('navigation-policy-decision-requested',
