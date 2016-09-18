@@ -1,3 +1,9 @@
+digitalocean-indicator (0.2.2-0~andrewsomething1) xenial; urgency=medium
+
+  * New upstream release.
+
+ -- Andrew Starr-Bochicchio <a.starr.b@gmail.com>  Sun, 18 Sep 2016 14:20:18 -0400
+
 digitalocean-indicator (0.2.1-0~andrewsomething1) trusty; urgency=medium
 
   * New upstream release.
