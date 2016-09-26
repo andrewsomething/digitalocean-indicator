@@ -1,6 +1,8 @@
 DigitalOcean Indicator
 ======================
 
+[![Build Status](https://travis-ci.org/andrewsomething/digitalocean-indicator.svg?branch=master)](https://travis-ci.org/andrewsomething/digitalocean-indicator)
+
 The DigitalOcean indicator allows you to monitor and manage your droplets directly from your panel. You can:
 
   - Quickly see which droplets are active.

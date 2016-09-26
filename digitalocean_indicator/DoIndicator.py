@@ -56,7 +56,7 @@ class IndicatorError(Exception):
 
 
 class Indicator:
-    def __init__(self):
+    def __init__(self, token=None):
         self.indicator = AppIndicator3.Indicator.new('digitalocean-indicator',
                          '',
                          AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
@@ -74,7 +74,10 @@ class Indicator:
         self.preferences_dialog = None
         self.preferences_changed = False
 
-        self.do_api_token = self.settings.get_string("do-api-token")
+        if token:
+            self.do_api_token = token
+        else:
+            self.do_api_token = self.settings.get_string("do-api-token")
 
         self.menu = Gtk.Menu()
 
