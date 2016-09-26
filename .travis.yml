@@ -1,19 +1,22 @@
 language: python
 python:
   - "2.7"
-  - "3.2"
 
 sudo: false
 
 virtualenv:
   system_site_packages: true
 
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+
 addons:
   apt:
     packages:
     - python-distutils-extra
     - python-gi
-    - python3-gi
     - gir1.2-appindicator3-0.1
     - gir1.2-glib-2.0
     - gir1.2-gtk-3.0
