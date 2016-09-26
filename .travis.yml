@@ -1,0 +1,21 @@
+language: python
+python:
+  - "2.7"
+  - "3.2"
+
+sudo: false
+
+addons:
+  apt:
+    packages:
+    - python-distutils-extra
+    - python-gi
+    - python3-gi
+    - gir1.2-appindicator3-0.1
+    - gir1.2-glib-2.0
+    - gir1.2-gtk-3.0
+    - gir1.2-notify-0.7
+
+install: "pip install python-digitalocean responses requests"
+
+script: "nosetests -v --with-coverage --cover-package=digitalocean_indicator"
