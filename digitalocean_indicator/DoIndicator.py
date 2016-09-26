@@ -31,9 +31,28 @@ from gi.repository import Notify
 from digitalocean_indicator.DoPreferencesDialog import DoPreferencesDialog
 from digitalocean_indicator_lib.helpers import get_media_file
 
+from requests.exceptions import ConnectionError
+
 import gettext
 from gettext import gettext as _
 gettext.textdomain('digitalocean-indicator')
+
+
+class IndicatorError(Exception):
+    def __init__(self, e, msg, indicator):
+        self.msg = msg
+        if e.message:
+            print("{0}: {1}").format(type(e).__name__, e.message)
+        error_indicator = Gtk.ImageMenuItem.new_with_label(self.msg)
+        img = Gtk.Image.new_from_icon_name("error", Gtk.IconSize.MENU)
+        error_indicator.set_always_show_image(True)
+        error_indicator.set_image(img)
+        error_indicator.connect('activate', indicator.on_preferences_activate)
+        error_indicator.show()
+        indicator.menu.append(error_indicator)
+
+    def __str__(self):
+        return self.msg
 
 
 class Indicator:
@@ -67,7 +86,22 @@ class Indicator:
         GLib.timeout_add_seconds(self.interval*60, self.timeout_set)
 
     def build_menu(self):
-        self.add_droplets()
+        try:
+            droplets = self.get_droplets()
+            for droplet in droplets:
+                self.add_droplet(droplet)
+
+        except ConnectionError, e:
+            msg = _("No network connection.")
+            IndicatorError(e, msg, self)
+
+        except (digitalocean.baseapi.TokenError, digitalocean.baseapi.DataReadError), e:
+            msg = _("Please connect to your DigitalOcean account.")
+            IndicatorError(e, msg, self)
+
+        except Exception, e:
+            msg = _("Unable to reach the DigitalOcean API.")
+            IndicatorError(e, msg, self)
 
         self.seperator = Gtk.SeparatorMenuItem.new()
         self.seperator.show()
@@ -91,117 +125,110 @@ class Indicator:
         self.menu.show()
         self.indicator.set_menu(self.menu)
 
-    def add_droplets(self):
-        try:
-            manager = digitalocean.Manager(token=self.do_api_token)
-            my_droplets = manager.get_all_droplets()
-            for droplet in my_droplets:
-                droplet_item = Gtk.ImageMenuItem.new_with_label(droplet.name)
-                droplet_item.set_always_show_image(True)
-                if droplet.status == "active":
-                    img = Gtk.Image.new_from_icon_name("gtk-ok",
-                                                       Gtk.IconSize.MENU)
-                    droplet_item.set_image(img)
-                else:
-                    img = Gtk.Image.new_from_icon_name("gtk-stop",
-                                                       Gtk.IconSize.MENU)
-                    droplet_item.set_image(img)
-                droplet_item.show()
-                sub_menu = Gtk.Menu.new()
+    def get_droplets(self):
+        manager = digitalocean.Manager(token=self.do_api_token)
+        droplets = manager.get_all_droplets()
 
-                ip = Gtk.MenuItem.new()
-                ip.set_label(_("IP: ") + str(droplet.ip_address))
-                ip.connect('activate', self.on_ip_clicked)
-                ip.show()
-                sub_menu.append(ip)
+        return droplets
 
-                image = droplet.image['name']
-                image_id = Gtk.MenuItem.new()
-                image_id.set_label(_("Type: ") + image)
-                image_id.show()
-                sub_menu.append(image_id)
+    def add_droplet(self, droplet):
+        droplet_item = Gtk.ImageMenuItem.new_with_label(droplet.name)
+        droplet_item.set_always_show_image(True)
+        if droplet.status == "active":
+            img = Gtk.Image.new_from_icon_name("gtk-ok",
+                                               Gtk.IconSize.MENU)
+            droplet_item.set_image(img)
+        else:
+            img = Gtk.Image.new_from_icon_name("gtk-stop",
+                                               Gtk.IconSize.MENU)
+            droplet_item.set_image(img)
 
-                region = droplet.region['name']
-                region_id = Gtk.MenuItem.new()
-                region_id.set_label(_("Region: ") + region)
-                region_id.show()
-                sub_menu.append(region_id)
+        sub_menu = self.build_droplet_details(droplet)
 
-                size = droplet.size_slug
-                size_id = Gtk.MenuItem.new()
-                size_id.set_label(_("Size: ") + size)
-                size_id.show()
-                sub_menu.append(size_id)
+        droplet_item.set_submenu(sub_menu)
+        droplet_item.show()
+        sub_menu.show()
+        self.menu.append(droplet_item)
 
-                seperator = Gtk.SeparatorMenuItem.new()
-                seperator.show()
-                sub_menu.append(seperator)
+    def build_droplet_details(self, droplet):
+        sub_menu = Gtk.Menu.new()
 
-                web = Gtk.MenuItem.new()
-                web.set_label(_("View on web..."))
-                droplet_url = "https://cloud.digitalocean.com/droplets/%s" % droplet.id
-                web.connect('activate', self.open_web_link, droplet_url)
-                web.show()
-                sub_menu.append(web)
+        ip = Gtk.MenuItem.new()
+        ip.set_label(_("IP: ") + str(droplet.ip_address))
+        ip.connect('activate', self.on_ip_clicked)
+        ip.show()
+        sub_menu.append(ip)
 
-                if droplet.status == "active":
-                    power_off = Gtk.ImageMenuItem.new_with_label(
-                        _("Power off..."))
-                    power_off.set_always_show_image(True)
-                    img = Gtk.Image.new_from_icon_name("system-shutdown",
-                                                       Gtk.IconSize.MENU)
-                    power_off.set_image(img)
-                    power_off.connect('activate',
-                                      self.on_power_toggled,
-                                      droplet,
-                                      'off')
-                    power_off.show()
-                    sub_menu.append(power_off)
+        image = droplet.image['name']
+        image_id = Gtk.MenuItem.new()
+        image_id.set_label(_("Type: ") + image)
+        image_id.show()
+        sub_menu.append(image_id)
 
-                    reboot = Gtk.ImageMenuItem.new_with_label(_("Reboot..."))
-                    reboot.set_always_show_image(True)
-                    img = Gtk.Image.new_from_icon_name("system-reboot",
-                                                       Gtk.IconSize.MENU)
-                    reboot.set_image(img)
-                    reboot.connect('activate',
-                                   self.on_power_toggled,
-                                   droplet,
-                                   'reboot')
-                    reboot.show()
-                    sub_menu.append(reboot)
+        region = droplet.region['name']
+        region_id = Gtk.MenuItem.new()
+        region_id.set_label(_("Region: ") + region)
+        region_id.show()
+        sub_menu.append(region_id)
 
-                else:
-                    power_on = Gtk.ImageMenuItem.new_with_label(
-                        _("Power on..."))
-                    power_on.set_always_show_image(True)
-                    img = Gtk.Image.new_from_icon_name("gtk-ok",
-                                                       Gtk.IconSize.MENU)
-                    power_on.set_image(img)
-                    power_on.connect('activate',
-                                     self.on_power_toggled,
-                                     droplet,
-                                     'on')
-                    power_on.show()
-                    sub_menu.append(power_on)
+        size = droplet.size_slug
+        size_id = Gtk.MenuItem.new()
+        size_id.set_label(_("Size: ") + size)
+        size_id.show()
+        sub_menu.append(size_id)
 
-                sub_menu.show()
-                droplet_item.set_submenu(sub_menu)
-                self.menu.append(droplet_item)
-        except Exception, e:
-            if e.message:
-                print("Error: ", e.message)
-            if "Unable to authenticate you." or "No token provied." in e.message:
-                error_indicator = Gtk.ImageMenuItem.new_with_label(
-                    _("Please connect to your DigitalOcean account."))
-            else:
-                error_indicator = Gtk.ImageMenuItem.new_with_label(
-                    _("No network connection."))
-            img = Gtk.Image.new_from_icon_name("error", Gtk.IconSize.MENU)
-            error_indicator.set_always_show_image(True)
-            error_indicator.set_image(img)
-            error_indicator.connect('activate', self.on_preferences_activate)
-            error_indicator.show()
-            self.menu.append(error_indicator)
+        seperator = Gtk.SeparatorMenuItem.new()
+        seperator.show()
+        sub_menu.append(seperator)
+
+        web = Gtk.MenuItem.new()
+        web.set_label(_("View on web..."))
+        droplet_url = "https://cloud.digitalocean.com/droplets/%s" % droplet.id
+        web.connect('activate', self.open_web_link, droplet_url)
+        web.show()
+        sub_menu.append(web)
+
+        if droplet.status == "active":
+            power_off = Gtk.ImageMenuItem.new_with_label(
+                _("Power off..."))
+            power_off.set_always_show_image(True)
+            img = Gtk.Image.new_from_icon_name("system-shutdown",
+                                               Gtk.IconSize.MENU)
+            power_off.set_image(img)
+            power_off.connect('activate',
+                              self.on_power_toggled,
+                              droplet,
+                              'off')
+            power_off.show()
+            sub_menu.append(power_off)
+
+            reboot = Gtk.ImageMenuItem.new_with_label(_("Reboot..."))
+            reboot.set_always_show_image(True)
+            img = Gtk.Image.new_from_icon_name("system-reboot",
+                                               Gtk.IconSize.MENU)
+            reboot.set_image(img)
+            reboot.connect('activate',
+                           self.on_power_toggled,
+                           droplet,
+                           'reboot')
+            reboot.show()
+            sub_menu.append(reboot)
+
+        else:
+            power_on = Gtk.ImageMenuItem.new_with_label(
+                _("Power on..."))
+            power_on.set_always_show_image(True)
+            img = Gtk.Image.new_from_icon_name("gtk-ok",
+                                               Gtk.IconSize.MENU)
+            power_on.set_image(img)
+            power_on.connect('activate',
+                             self.on_power_toggled,
+                             droplet,
+                             'on')
+            power_on.show()
+            sub_menu.append(power_on)
+
+        return sub_menu
 
     def timeout_set(self):
         self.rebuild_menu()
