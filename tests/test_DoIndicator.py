@@ -93,8 +93,7 @@ class TestDoIndicator(unittest.TestCase):
                       status=200,
                       content_type='application/json')
 
-        indicator = DoIndicator.Indicator()
-        indicator.do_api_token = self.do_api_token
+        indicator = DoIndicator.Indicator(self.do_api_token)
         droplets = indicator.get_droplets()
         d = droplets[0]
 
@@ -111,8 +110,7 @@ class TestDoIndicator(unittest.TestCase):
                       status=200,
                       content_type='application/json')
 
-        indicator = DoIndicator.Indicator()
-        indicator.do_api_token = self.do_api_token
+        indicator = DoIndicator.Indicator(self.do_api_token)
         indicator.build_menu()
 
         name = indicator.menu.get_children()[0]
@@ -133,8 +131,7 @@ class TestDoIndicator(unittest.TestCase):
         responses.add(responses.GET, url,
                       body=exception)
 
-        indicator = DoIndicator.Indicator()
-        indicator.do_api_token = self.do_api_token
+        indicator = DoIndicator.Indicator(self.do_api_token)
         indicator.build_menu()
 
         error = indicator.menu.get_children()[0]
@@ -159,8 +156,7 @@ class TestDoIndicator(unittest.TestCase):
                       body='{"id":"unauthorized","message":"Unable to authenticate you."}',
                       status=401)
 
-        indicator = DoIndicator.Indicator()
-        indicator.do_api_token = self.do_api_token
+        indicator = DoIndicator.Indicator(self.do_api_token)
         indicator.build_menu()
 
         error = indicator.menu.get_children()[0]
