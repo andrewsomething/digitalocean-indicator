@@ -3,11 +3,11 @@ DigitalOcean Indicator
 
 [![Build Status](https://travis-ci.org/andrewsomething/digitalocean-indicator.svg?branch=master)](https://travis-ci.org/andrewsomething/digitalocean-indicator)
 
-The DigitalOcean indicator allows you to monitor and manage your droplets directly from your panel. You can:
+The DigitalOcean indicator allows you to monitor and manage your Droplets directly from your panel. You can:
 
-  - Quickly see which droplets are active.
-  - Reboot, power on, and/or power down you droplets.
-  - Copy your droplet's IP address with a click for easy access.
+  - Quickly see which Droplets are active.
+  - Reboot, power on, and/or power down you Droplets.
+  - Copy your Droplet's IP address with a click for easy access.
 
 ![DigitalOcean Indicator screenhot](http://i.imgur.com/ssV10vC.png)
 
