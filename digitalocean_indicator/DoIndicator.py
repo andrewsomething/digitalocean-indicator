@@ -156,29 +156,30 @@ class Indicator:
     def build_droplet_details(self, droplet):
         sub_menu = Gtk.Menu.new()
 
-        ip = Gtk.MenuItem.new()
-        ip.set_label(_("IP: ") + str(droplet.ip_address))
-        ip.connect('activate', self.on_ip_clicked)
-        ip.show()
-        sub_menu.append(ip)
+        ip = str(droplet.ip_address)
+        ip_item = Gtk.MenuItem.new()
+        ip_item.set_label(_("IP: ") + ip)
+        ip_item.connect('activate', self.on_ip_clicked)
+        ip_item.show()
+        sub_menu.append(ip_item)
 
         image = droplet.image['name']
-        image_id = Gtk.MenuItem.new()
-        image_id.set_label(_("Type: ") + image)
-        image_id.show()
-        sub_menu.append(image_id)
+        image_item = Gtk.MenuItem.new()
+        image_item.set_label(_("Type: ") + image)
+        image_item.show()
+        sub_menu.append(image_item)
 
         region = droplet.region['name']
-        region_id = Gtk.MenuItem.new()
-        region_id.set_label(_("Region: ") + region)
-        region_id.show()
-        sub_menu.append(region_id)
+        region_item = Gtk.MenuItem.new()
+        region_item.set_label(_("Region: ") + region)
+        region_item.show()
+        sub_menu.append(region_item)
 
         size = droplet.size_slug
-        size_id = Gtk.MenuItem.new()
-        size_id.set_label(_("Size: ") + size)
-        size_id.show()
-        sub_menu.append(size_id)
+        size_item = Gtk.MenuItem.new()
+        size_item.set_label(_("Size: ") + size)
+        size_item.show()
+        sub_menu.append(size_item)
 
         tags = droplet.tags
         if len(tags) > 0:
