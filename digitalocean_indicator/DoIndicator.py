@@ -180,6 +180,13 @@ class Indicator:
         size_id.show()
         sub_menu.append(size_id)
 
+        tags = droplet.tags
+        if len(tags) > 0:
+            tags_item = Gtk.MenuItem.new()
+            tags_item.set_label(_("Tags: ") + ", ".join(tags))
+            tags_item.show()
+            sub_menu.append(tags_item)
+
         seperator = Gtk.SeparatorMenuItem.new()
         seperator.show()
         sub_menu.append(seperator)

@@ -51,7 +51,8 @@ class TestDoIndicator(unittest.TestCase):
     def test_build_droplet_details_active(self):
         droplet = Droplet(name="test", image={'name': 'Ubuntu'},
                           status="active", ip_address="192.0.2.0",
-                          size_slug="1gb", region={'name': 'nyc3'})
+                          size_slug="1gb", region={'name': 'nyc3'},
+                          tags=['foo', 'bar'])
         indicator = DoIndicator.Indicator()
         sub_menu = indicator.build_droplet_details(droplet)
 
@@ -59,15 +60,17 @@ class TestDoIndicator(unittest.TestCase):
         image = sub_menu.get_children()[1]
         region = sub_menu.get_children()[2]
         size = sub_menu.get_children()[3]
-        view = sub_menu.get_children()[5]
-        power = sub_menu.get_children()[6]
-        reboot = sub_menu.get_children()[7]
+        tags = sub_menu.get_children()[4]
+        view = sub_menu.get_children()[6]
+        power = sub_menu.get_children()[7]
+        reboot = sub_menu.get_children()[8]
 
-        self.assertEqual(len(sub_menu), 8)
+        self.assertEqual(len(sub_menu), 9)
         self.assertEqual(ip.get_label(), "IP: 192.0.2.0")
         self.assertEqual(region.get_label(), "Region: nyc3")
         self.assertEqual(image.get_label(), "Type: Ubuntu")
         self.assertEqual(size.get_label(), "Size: 1gb")
+        self.assertEqual(tags.get_label(), "Tags: foo, bar")
         self.assertEqual(view.get_label(), "View on web...")
         self.assertEqual(power.get_label(), "Power off...")
         self.assertEqual(reboot.get_label(), "Reboot...")
