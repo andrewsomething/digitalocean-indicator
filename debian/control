@@ -15,7 +15,7 @@ Depends: gir1.2-appindicator3-0.1,
          gir1.2-glib-2.0,
          gir1.2-gtk-3.0,
          gir1.2-notify-0.7,
-         python-digitalocean (>= 1.0.0),
+         python-digitalocean (>= 1.10.0),
          ${misc:Depends},
          ${python:Depends}
 Description: manage and monitor your droplets
