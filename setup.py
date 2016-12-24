@@ -141,7 +141,7 @@ class InstallAndUpdateDataDirectory(DistUtilsExtra.auto.install_auto):
 
 DistUtilsExtra.auto.setup(
     name='digitalocean-indicator',
-    version='0.1',
+    version='0.3',
     license='GPL-3',
     author='Andrew Starr-Bochicchio',
     author_email='a.starr.b@gmail.com',
@@ -157,4 +157,3 @@ droplets directly from your panel. You can:
     url='https://github.com/andrewsomething/digitalocean-indicator',
     cmdclass={'install': InstallAndUpdateDataDirectory}
     )
-

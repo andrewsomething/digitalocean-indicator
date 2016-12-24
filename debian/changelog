@@ -1,3 +1,9 @@
+digitalocean-indicator (0.3-0~andrewsomething1) yakkety; urgency=medium
+
+  * New upstream release.
+
+ -- Andrew Starr-Bochicchio <a.starr.b@gmail.com>  Fri, 23 Dec 2016 22:11:26 -0500
+
 digitalocean-indicator (0.2.2-0~andrewsomething1) xenial; urgency=medium
 
   * New upstream release.
