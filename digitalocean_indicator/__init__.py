@@ -29,9 +29,9 @@ from digitalocean_indicator_lib import set_up_logging, get_version
 def parse_options():
     """Support for command line options"""
     parser = optparse.OptionParser(version="%%prog %s" % get_version())
-    parser.add_option(
-        "-v", "--verbose", action="count", dest="verbose",
-        help=_("Show debug messages (-vv debugs digitalocean_indicator_lib also)"))
+    parser.add_option("-v", "--verbose",
+                      action="count", dest="verbose",
+                      help="Show debug messages")
     (options, args) = parser.parse_args()
 
     set_up_logging(options)

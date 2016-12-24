@@ -53,8 +53,7 @@ class Builder(Gtk.Builder):
 
 # pylint: disable=R0201
 # this is a method so that a subclass of Builder can redefine it
-    def default_handler(self,
-        handler_name, filename, *args, **kwargs):
+    def default_handler(self, handler_name, filename, *args, **kwargs):
         '''helps the apprentice guru
 
     glade defined handlers that do not exist come here instead.
@@ -96,10 +95,10 @@ class Builder(Gtk.Builder):
             # populate connections list
             ele_signals = ele_widget.findall("signal")
 
-            connections = [
-                (name,
-                ele_signal.attrib['name'],
-                ele_signal.attrib['handler']) for ele_signal in ele_signals]
+            connections = [(name,
+                           ele_signal.attrib['name'],
+                           ele_signal.attrib['handler'])
+                           for ele_signal in ele_signals]
 
             if connections:
                 self.connections.extend(connections)
@@ -107,7 +106,7 @@ class Builder(Gtk.Builder):
         ele_signals = tree.getiterator("signal")
         for ele_signal in ele_signals:
             self.glade_handler_dict.update(
-            {ele_signal.attrib["handler"]: None})
+                 {ele_signal.attrib["handler"]: None})
 
     def connect_signals(self, callback_obj):
         '''connect the handlers defined in glade
@@ -129,7 +128,7 @@ class Builder(Gtk.Builder):
 
                 # replace the run time warning
                 logger.warn("expected handler '%s' in %s",
-                 item[0], filename)
+                            item[0], filename)
 
         # connect glade define handlers
         Gtk.Builder.connect_signals(self, connection_dict)
@@ -138,7 +137,7 @@ class Builder(Gtk.Builder):
         for connection in self.connections:
             widget_name, signal_name, handler_name = connection
             logger.debug("connect builder by design '%s', '%s', '%s'",
-             widget_name, signal_name, handler_name)
+                         widget_name, signal_name, handler_name)
 
     def get_ui(self, callback_obj=None, by_name=True):
         '''Creates the ui object with widgets as attributes
@@ -174,7 +173,7 @@ class UiFactory():
         cannot_message = """cannot bind ui.%s, name already exists
         consider using a pythonic name instead of design name '%s'"""
         consider_message = """consider using a pythonic name instead of design name '%s'"""
-        
+
         for (widget_name, widget) in widget_dict.items():
             pyname = make_pyname(widget_name)
             if pyname != widget_name:
@@ -284,13 +283,13 @@ def auto_connect_by_name(callback_obj, builder):
                 handler_names.append("on_%s" % sig)
 
             do_connect(item, sig, handler_names,
-             callback_handler_dict, builder.connections)
+                       callback_handler_dict, builder.connections)
 
     log_unconnected_functions(callback_handler_dict, builder.connections)
 
 
 def do_connect(item, signal_name, handler_names,
-        callback_handler_dict, connections):
+               callback_handler_dict, connections):
     '''connect this signal to an unused handler'''
     widget_name, widget = item
 
@@ -303,7 +302,7 @@ def do_connect(item, signal_name, handler_names,
             connections.append(connection)
 
             logger.debug("connect builder by name '%s','%s', '%s'",
-             widget_name, signal_name, handler_name)
+                         widget_name, signal_name, handler_name)
 
 
 def log_unconnected_functions(callback_handler_dict, connections):

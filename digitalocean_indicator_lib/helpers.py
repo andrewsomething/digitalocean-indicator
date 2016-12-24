@@ -27,7 +27,7 @@ from locale import gettext as _
 def get_builder(builder_file_name):
     """Return a fully-instantiated Gtk.Builder instance from specified ui 
     file
-    
+
     :param builder_file_name: The name of the builder file, without extension.
         Assumed to be in the 'ui' directory under the data path.
     """

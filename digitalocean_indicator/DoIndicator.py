@@ -57,9 +57,10 @@ class IndicatorError(Exception):
 
 class Indicator:
     def __init__(self, token=None):
-        self.indicator = AppIndicator3.Indicator.new('digitalocean-indicator',
-                         '',
-                         AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
+        self.indicator = AppIndicator3.Indicator.new(
+            'digitalocean-indicator',
+            '',
+            AppIndicator3.IndicatorCategory.APPLICATION_STATUS)
         self.indicator.set_status(AppIndicator3.IndicatorStatus.ACTIVE)
         icon_uri = get_media_file("digitalocean-indicator.svg")
         icon_path = icon_uri.replace("file:///", '')
@@ -86,7 +87,7 @@ class Indicator:
         # Refresh menu every 10 min by default
         self.change_timeout = False
         self.interval = self.settings.get_int("refresh-interval")
-        GLib.timeout_add_seconds(self.interval*60, self.timeout_set)
+        GLib.timeout_add_seconds(self.interval * 60, self.timeout_set)
 
     def build_menu(self):
         try:
@@ -98,9 +99,10 @@ class Indicator:
             msg = _("No network connection.")
             IndicatorError(e, msg, self)
 
-        except (digitalocean.baseapi.TokenError, digitalocean.baseapi.DataReadError), e:
-            msg = _("Please connect to your DigitalOcean account.")
-            IndicatorError(e, msg, self)
+        except (digitalocean.baseapi.TokenError,
+                digitalocean.baseapi.DataReadError), e:
+                    msg = _("Please connect to your DigitalOcean account.")
+                    IndicatorError(e, msg, self)
 
         except Exception, e:
             msg = _("Unable to reach the DigitalOcean API.")
@@ -244,7 +246,7 @@ class Indicator:
     def timeout_set(self):
         self.rebuild_menu()
         if self.change_timeout:
-            GLib.timeout_add_seconds(self.interval*60, self.timeout_set)
+            GLib.timeout_add_seconds(self.interval * 60, self.timeout_set)
             return False
         return True
 
@@ -286,7 +288,7 @@ class Indicator:
         if key == "refresh-interval":
             self.change_timeout = True
             self.interval = settings.get_int(key)
-            GLib.timeout_add_seconds(self.interval*60, self.timeout_set)
+            GLib.timeout_add_seconds(self.interval * 60, self.timeout_set)
         else:
             self.preferences_changed = True
 

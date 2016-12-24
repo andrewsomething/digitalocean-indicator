@@ -15,7 +15,7 @@ CALLBACK_URL = 'http://andrewsomething.com'
 class AuthWin(Gtk.Dialog):
     def __init__(self, parent):
         Gtk.Dialog.__init__(self, "My Dialog", parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL))
+                            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL))
 
         oauth_url = "{0}/authorize?response_type=token&client_id={1}&redirect_uri={2}&scope=read%20write".format(
                     BASE_URL, CLIENT_ID, CALLBACK_URL)

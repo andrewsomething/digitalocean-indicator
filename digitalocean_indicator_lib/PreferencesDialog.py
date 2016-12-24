@@ -30,7 +30,7 @@ class PreferencesDialog(Gtk.Dialog):
     def __new__(cls):
         """Special static method that's automatically called by Python when 
         constructing a new instance of this class.
-        
+
         Returns a fully instantiated PreferencesDialog object.
         """
         builder = get_builder('PreferencesDigitaloceanIndicatorDialog')
@@ -45,7 +45,7 @@ class PreferencesDialog(Gtk.Dialog):
         and creating a PreferencesDialog object with it in order to
         finish initializing the start of the new PerferencesDigitaloceanIndicatorDialog
         instance.
-        
+
         Put your initialization code in here and leave __init__ undefined.
         """
 
@@ -57,4 +57,3 @@ class PreferencesDialog(Gtk.Dialog):
 
     def on_btn_close_clicked(self, widget, data=None):
         self.destroy()
-
