@@ -3,3 +3,4 @@
 gschemas.compiled
 build/
 .coverage
+.cache/
