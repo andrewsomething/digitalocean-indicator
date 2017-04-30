@@ -1,3 +1,9 @@
+digitalocean-indicator (0.3-0~andrewsomething2) UNRELEASED; urgency=medium
+
+  * debian/control: Depend on gir1.2-webkit-3.0
+
+ -- Andrew Starr-Bochicchio <a.starr.b@gmail.com>  Sun, 30 Apr 2017 16:22:59 -0400
+
 digitalocean-indicator (0.3-0~andrewsomething1) yakkety; urgency=medium
 
   * New upstream release.
